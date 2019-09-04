@@ -1,16 +1,26 @@
+using Hummingbird.Cli.Assets;
 using McMaster.Extensions.CommandLineUtils;
 using System.Threading.Tasks;
 
 namespace Hummingbird.Cli
 {
-    [Command(Name = "hb", Description = "A lightweight command line tool for GitHub commit comment based code reviews.")]
+    [Command(Name = "hb", Description = Resources.MainCommand.CommandDescription)]
     [HelpOption(Description = "Show command line help.", Inherited = true)]
-    internal partial class MainCommand
+    [Subcommand(typeof(TasksCommand))]
+    internal class MainCommand
     {
-        public Task OnExecute(CommandLineApplication app)
-        {
-            app.ShowHelp(usePager: false);
+        private readonly CommandLineApplication commandLineApplication;
 
+        public MainCommand(CommandLineApplication commandLineApplication)
+        {
+            System.Diagnostics.Debug.Assert(commandLineApplication != null);
+
+            this.commandLineApplication = commandLineApplication;
+        }
+
+        public Task OnExecute()
+        {
+            commandLineApplication.ShowHelp(usePager: false);
             return Task.CompletedTask;
         }
     }
